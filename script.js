@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: 3, name: "Product 3", price: 44.99 },
   ];
 
-  const cart = [];
+  let cart = [];
 
   const productList = document.querySelector("#product-list");
   const cartItems = document.querySelector("#cart-items");
@@ -48,7 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function removeFromCart(product) {
-    cart.pop(product);
+    const index = cart.findIndex((item) => item.id === product.id);
+    if (index !== -1) {
+      cart.splice(index, 1); // remove the exact item by index
+    }
     renderCart();
   }
 
@@ -80,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       emptyCartMessage.classList.remove("hidden");
       totalPriceDisplay.textContent = `0.00`;
     }
+    saveData();
   }
 
   checkOutBtn.addEventListener("click", () => {
@@ -87,4 +91,18 @@ document.addEventListener("DOMContentLoaded", () => {
     alert("checkout successfully");
     renderCart();
   });
+
+  function saveData() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
+
+  function showData() {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      cart = JSON.parse(savedCart);
+      renderCart();
+    }
+  }
+
+  showData();
 });
